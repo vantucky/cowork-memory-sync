@@ -11,7 +11,7 @@ description: >
   remove the local link (that's unlink-space) or to push/pull (that's
   snapshot-conversation / catch-up).
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # scrub-space
@@ -24,7 +24,7 @@ The `link-space` skill may delegate here during a solo→shared promotion (scrub
 
 Read `MEMORY_DIR/.sync-link.json` (memory dir is in your system prompt's auto-memory section). If missing, tell the user *"This space isn't linked — nothing to scrub. (Run 'link this space' first, or delete files in the folder manually.)"* and stop. Extract `alias`, `store_path`, `mode`.
 
-Resolve `USER_NAME` the same way `snapshot-conversation` does (global `~/.config/cowork-memory-sync/identity.json` → per-space `user` field → legacy → `hostname`). You need it to identify "your own" files.
+Resolve `USER_NAME` the same way `snapshot-conversation` does (global `CONFIG_HOME/identity.json` → per-space `user` field → legacy → `hostname`; `CONFIG_HOME` is `~/.config/cowork-memory-sync` on macOS, `$USERPROFILE/.config/cowork-memory-sync` on Windows). You need it to identify "your own" files.
 
 If a caller (link-space) passed an explicit target `store_path` different from the link file's (e.g. scrubbing the *old* folder during a re-home), use the passed path.
 
@@ -53,7 +53,7 @@ AskUserQuestion:
 
 ## Step 4 — Build the candidate set
 
-Start from the scope (Step 2): `ls "<store_path>"/*.md` then restrict to `*-<USER_NAME>-*.md` if scope is "Only mine".
+Start from the scope (Step 2): **Glob** `<store_path>/*.md` (OS-abstracted), then restrict to `*-<USER_NAME>-*.md` if scope is "Only mine".
 
 Apply the filter:
 - **Everything in scope** — all of them.
@@ -107,6 +107,6 @@ If scope was "Everyone's" on a shared space, restate that other participants' fi
 - **Don't delete without the Step 5 preview + confirm.** This is destructive and, for other people's files, irrecoverable-to-them.
 - **Don't skip the backup.** Copy-verify-delete, always.
 - **Don't default to everyone's files.** "Only mine" is the safe default; deleting others' snapshots requires an explicit, warned, double-confirmed choice.
-- **Don't back up into the cloud folder or any `~/Library/CloudStorage` path** — it would re-sync the "deleted" files right back. The backup lives in the local memory dir.
+- **Don't back up into the cloud folder or any cloud-sync mount** (macOS `~/Library/CloudStorage`, Windows `%USERPROFILE%\OneDrive`, etc.) — it would re-sync the "deleted" files right back. The backup lives in the local memory dir.
 - **Don't remove the link or presence files here** — that's `unlink-space`/`link-space`. Scrub only touches snapshot `.md` files.
 - **Don't touch the `.participants/` folder.**

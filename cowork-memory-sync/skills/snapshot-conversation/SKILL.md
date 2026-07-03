@@ -10,7 +10,7 @@ description: >
   collaborator — can catch up. On a shared space the push is gated
   behind a review step. Do not use for syncing memory files directly.
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # snapshot-conversation
@@ -27,14 +27,14 @@ Extract `alias`, `store_path`, and `mode` (default `solo` if the field is absent
 
 ## Step 2 — Resolve your identity (user + machine)
 
-You need `USER_NAME` and `MACHINE` for the filename and frontmatter. Check sources in priority order. **Each step degrades silently — do not prompt, do not call `mcp__cowork__request_cowork_directory`. This is a push-time path; interactive identity setup belongs in `link-space`.**
+You need `USER_NAME` and `MACHINE` for the filename and frontmatter. The config location is `CONFIG_HOME` — `$HOME/.config/cowork-memory-sync` on macOS, `$USERPROFILE/.config/cowork-memory-sync` on Windows. Check sources in priority order. **Each step degrades silently — do not prompt, do not call `mcp__cowork__request_cowork_directory`. This is a push-time path; interactive identity setup belongs in `link-space`.**
 
-1. **Global identity** — Read `~/.config/cowork-memory-sync/identity.json` with the Read tool.
+1. **Global identity** — Read `CONFIG_HOME/identity.json` with the Read tool.
    - Read succeeds → parse `user` and `machine`; use any non-empty values found. If both present, done.
    - Read fails "outside connected folders" or file-not-found → skip to source 2.
 2. **Per-space fallback** — the `.sync-link.json` from Step 1 may carry `user` / `machine` fields (written by `link-space` when the global config wasn't reachable). Use them if present.
-3. **Legacy `machine.txt`** — for `machine` only, Read `~/.config/cowork-memory-sync/machine.txt` (v2). Use if present.
-4. **Last resort** — `hostname -s` via Bash for `machine`. For `user`, if still unset, use `"unknown"`.
+3. **Legacy `machine.txt`** — for `machine` only, Read `CONFIG_HOME/machine.txt` (v2). Use if present.
+4. **Last resort** — `hostname` via Bash for `machine` (strip any trailing `.domain` yourself for portability). For `user`, if still unset, use `"unknown"`.
 
 If `USER_NAME` ended up `"unknown"`, note in the final report that the user should run `link-space` in this space to set an identity — attribution and the own-files-only sweep both depend on it. **On a `shared` space, an unknown `USER_NAME` is unsafe** (your files can't be distinguished from others' for the sweep, and collisions become likely): stop and tell the user to run `link-space` first.
 
@@ -58,18 +58,15 @@ Keep the user's exact phrasing where it matters (preferences, feedback). Don't p
 - **Slug**: 3–5 word kebab-case description. Examples: `rethink-sync-architecture`, `strategy-call`, `debug-scanner`, `cleanup-old-tags`.
 - **Filename**: `<date>-<USER_NAME>-<slug>.md`. (The user segment prevents collisions between participants and makes every file's author visible at a glance.)
 
-Check for collisions:
-```bash
-ls "<store_path>/<date>-<USER_NAME>-<slug>.md" 2>/dev/null
-```
-If it exists, append `-2`, `-3`, … until unique.
+Check for collisions with **Glob** `<store_path>/<date>-<USER_NAME>-<slug>.md` (OS-abstracted). If it exists, append `-2`, `-3`, … until unique.
 
 ## Step 5 — Timestamps
 
+Get the current timestamp (portable — this format works on both macOS/BSD and Windows/GNU `date`):
 ```bash
-date +'%Y-%m-%dT%H:%M:%S%z'        # NOW
-date -v+30d +'%Y-%m-%dT%H:%M:%S%z' # EXPIRES_AT (30 days out)
+date +'%Y-%m-%dT%H:%M:%S%z'   # NOW
 ```
+Compute `EXPIRES_AT` as **NOW + 30 days** yourself (date arithmetic on the `YYYY-MM-DD` portion, keeping the same time and `%z` offset). Do **not** shell out with `date -v+30d` (that's BSD/macOS-only and fails on Windows/GNU).
 
 ## Step 6 — Build the snapshot file
 
@@ -140,10 +137,7 @@ Write it back, preserving existing entries, 2-space indent.
 
 **Critical for shared spaces: only ever delete files you authored.** Never touch another participant's history.
 
-```bash
-ls "<store_path>"/*-<USER_NAME>-*.md 2>/dev/null   # your files only
-```
-For each, parse the leading `YYYY-MM-DD`. If it's more than 30 days before today, delete it:
+List **your files only** with **Glob** `<store_path>/*-<USER_NAME>-*.md` (OS-abstracted). For each, parse the leading `YYYY-MM-DD`; if it's more than 30 days before today, delete it:
 ```bash
 rm "<store_path>/<expired_filename>"
 ```

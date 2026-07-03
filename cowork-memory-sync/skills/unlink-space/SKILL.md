@@ -9,7 +9,7 @@ description: >
   removing the link on the current machine — the snapshot folder itself
   is left intact (other machines/people may still be linked to it).
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # unlink-space
@@ -40,7 +40,7 @@ Try to Read `MEMORY_DIR/.sync-link.json`.
 - **If it exists**: extract `alias`, `store_path`, and `mode` (default `solo` if absent), continue to Step 2.
 - **If it doesn't exist**: tell the user *"This space isn't linked — nothing to unlink."* and stop.
 
-If `mode == "shared"`, also resolve your `user`/`machine` identity (global `~/.config/cowork-memory-sync/identity.json` → per-space `user`/`machine` fields on this link) so you can find your presence file in Step 3.
+If `mode == "shared"`, also resolve your `user`/`machine` identity (global `CONFIG_HOME/identity.json` — `~/.config/cowork-memory-sync/` on macOS, `$USERPROFILE/.config/cowork-memory-sync` on Windows — → per-space `user`/`machine` fields on this link) so you can find your presence file in Step 3.
 
 ## Step 2 — Confirm with the user
 

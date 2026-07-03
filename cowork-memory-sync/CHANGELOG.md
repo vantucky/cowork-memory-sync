@@ -12,6 +12,18 @@ Bump the version in `.claude-plugin/plugin.json` in the **same commit** that int
 
 ---
 
+## [3.1.0] — 2026-07-03
+
+Cross-platform support: the plugin now works on **Windows** desktop Cowork as well as macOS. (The **web** version remains unsupported — no local cloud-folder mounts, so the file-based model doesn't apply.)
+
+### Changed
+- **Platform-aware paths.** Every skill resolves cloud-mount roots, the config location, and the Cowork sessions root per OS: macOS `~/Library/CloudStorage` + `~/.config/...` + `~/Library/Application Support/Claude/...`; Windows `%USERPROFILE%\OneDrive`/`Dropbox`/`iCloudDrive`/`Box` + `%USERPROFILE%\.config\...` + `%USERPROFILE%\AppData\Roaming\Claude\...`. `link-space` gained a **Platform** section defining `CLOUD_ROOTS` / `CONFIG_HOME` / `MEMORY_ROOT`, detected via `uname`.
+- **Removed BSD-only commands.** `date -v+30d` (macOS-only) is gone — the 30-day expiry is now computed in-model from a portable `date +…%z`. `hostname -s` → plain `hostname` with in-model domain-stripping.
+- **Fewer shell-isms.** Snapshot listing, collision checks, and counts use the OS-abstracted **Glob** tool instead of `ls`, so less rides on shell differences. Remaining shell use (`mkdir -p`, `rm`, `cp`, `grep`) is POSIX; on Windows this assumes Cowork's POSIX-style shell, and a skill stops with a clear message rather than guessing PowerShell syntax if that's absent.
+- **Docs** (README) gained a Platform-support table and Windows path examples; note that a macOS user and a Windows user can share the same space (identical snapshot files, per-machine path normalization).
+
+No schema or filename changes; v3.0.0 links and snapshots are unaffected.
+
 ## [3.0.0] — 2026-07-03
 
 Multi-participant release. A linked space can now be shared among **multiple people** (each on their own machine), not just multiple machines of one person. Snapshots are author-attributed; shared spaces gate every push behind a review step; a new skill bulk-scrubs the folder.

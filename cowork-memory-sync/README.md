@@ -2,7 +2,7 @@
 
 Share Cowork space conversations across your machines **and across people**, via a cloud-synced folder.
 
-> **Requires Claude Cowork.** This plugin depends on Cowork-only mechanics (the per-space memory directory surfaced in the system prompt, and `mcp__cowork__request_cowork_directory` for folder access). It does not work in the plain Claude Code CLI.
+> **Requires Claude Cowork on macOS or Windows (desktop).** This plugin depends on Cowork-only mechanics (the per-space memory directory surfaced in the system prompt, and `mcp__cowork__request_cowork_directory` for folder access) **and** on a locally-mounted cloud-sync folder. It works on the **macOS and Windows desktop apps**. It does **not** work in the plain Claude Code CLI, and the **web** version isn't supported (no local cloud-folder mounts).
 
 ## What this plugin does
 
@@ -41,8 +41,19 @@ Six skills, auto-triggered by natural-language phrases:
   - **Your own two Macs** → your OneDrive / iCloud Drive / Dropbox syncing the same folder to both.
   - **You + a colleague on the same tenant** → a SharePoint / OneDrive-Business shared library.
   - **You + an outside person** → a OneDrive / Dropbox / Box folder **shared with their account**, mounted locally on both sides.
-  The `~/Library/CloudStorage/` prefix is the usual mount point.
+  The usual local mount point is `~/Library/CloudStorage/` on **macOS** and a `%USERPROFILE%\OneDrive` / `\Dropbox` / `\iCloudDrive` folder on **Windows**.
 - Cowork directory access to the chosen folder (the `link-space` skill prompts for this on first link).
+
+## Platform support
+
+| Platform | Supported | Notes |
+|---|---|---|
+| **macOS** (Cowork desktop) | ✅ | Cloud folders under `~/Library/CloudStorage/`; identity in `~/.config/cowork-memory-sync/`. |
+| **Windows** (Cowork desktop) | ✅ | Cloud folders under `%USERPROFILE%` (`OneDrive`, `Dropbox`, `iCloudDrive`, `Box`); identity in `%USERPROFILE%\.config\cowork-memory-sync\`. |
+| **Web** | ❌ | No local cloud-folder mounts, so the file-based model doesn't apply. |
+| Claude Code CLI | ❌ | Not a Cowork environment. |
+
+Two people on **different** platforms (one macOS, one Windows) can still share a space — the plugin normalizes paths per machine; the snapshot files themselves are identical.
 
 ## How it works
 
