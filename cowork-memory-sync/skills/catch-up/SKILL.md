@@ -10,7 +10,7 @@ description: >
   a collaborator's on a shared space. Do not use for pushing snapshots;
   that's snapshot-conversation.
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
 ---
 
 # catch-up

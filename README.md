@@ -4,7 +4,7 @@ A [Claude Cowork](https://claude.ai) plugin to **share space conversations acros
 
 Finish a conversation on one machine, snapshot it, and catch up on it from another machine — or from a collaborator's. Snapshots are curated markdown summaries (not full transcripts, not raw memory files) written into a folder your cloud provider already syncs. **No daemon, no MCP server, no GitHub** — just files.
 
-> **Requires Claude Cowork.** The plugin uses Cowork-only mechanics (the per-space memory directory and directory-access grants) and does not run in the plain Claude Code CLI.
+> **Requires Claude Cowork on macOS or Windows (desktop).** The plugin uses Cowork-only mechanics (the per-space memory directory and directory-access grants) plus a locally-mounted cloud-sync folder. It runs on the macOS and Windows desktop apps; it does **not** run in the plain Claude Code CLI or the **web** version (no local cloud-folder mounts). A macOS user and a Windows user can share the same space.
 
 ## Install
 
