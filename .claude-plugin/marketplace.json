@@ -1,0 +1,13 @@
+{
+  "name": "cowork-memory-sync",
+  "owner": {
+    "name": "Rick Dyer"
+  },
+  "plugins": [
+    {
+      "name": "cowork-memory-sync",
+      "source": "./cowork-memory-sync",
+      "description": "Share Cowork space conversations across your machines AND across people, via a cloud-synced folder (OneDrive, iCloud, Dropbox, SharePoint/Teams, Box). Snapshot a conversation on one machine, catch up on it from another — or from a collaborator's machine. Spaces are solo (your machines only) or shared (multiple people), switchable either way, with a confirm-before-push review gate on shared spaces. Requires Claude Cowork. No daemon, no MCP, no GitHub."
+    }
+  ]
+}

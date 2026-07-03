@@ -1,0 +1,21 @@
+{
+  "name": "cowork-memory-sync",
+  "version": "3.0.0",
+  "description": "Share Cowork space conversations across machines AND across people. Snapshot a conversation on one machine, catch up on it from another — or from a collaborator's machine. Snapshots are attributed markdown files written into a cloud-synced folder you pick (a OneDrive/iCloud/Dropbox project folder, or a shared SharePoint/Teams library); cross-machine and cross-user propagation is handled by the cloud provider. Spaces can be solo (your machines only) or shared (multiple people), switchable in either direction, with a confirm-before-push gate on shared spaces. No daemon, no MCP, no GitHub.",
+  "author": {
+    "name": "Rick Dyer"
+  },
+  "keywords": [
+    "cowork",
+    "conversation",
+    "snapshot",
+    "sync",
+    "memory",
+    "collaboration",
+    "multi-user",
+    "onedrive",
+    "sharepoint",
+    "icloud",
+    "dropbox"
+  ]
+}
