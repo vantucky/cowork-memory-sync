@@ -26,7 +26,11 @@ Substitute your own names/identities as needed.
 
 These three checks cover the assumptions that could not be verified without a Windows Cowork instance. **If any fails, stop and report it** — it changes the fix.
 
-- [ ] **0a — POSIX shell.** In Travis's Windows Cowork, ask it to run `uname -s` and `date +%Y-%m-%d`.
+**Helper scripts** ([`tools/`](./tools)):
+- **[`tools/windows-layout-check.ps1`](./tools/windows-layout-check.ps1)** — run in **PowerShell** (or a Windows Claude Code session) to verify the app-data/sessions path, cloud mounts, and config path in one shot. Covers 0b/0c below. Paste its output back.
+- **[`tools/cowork-shell-check.sh`](./tools/cowork-shell-check.sh)** — paste **inside a Cowork session** and say "run this in bash" to check whether Cowork's shell is POSIX-style with the commands the plugin uses. This is the thorough version of 0a.
+
+- [ ] **0a — POSIX shell.** In Travis's Windows Cowork, run [`tools/cowork-shell-check.sh`](./tools/cowork-shell-check.sh) (or, quick version, ask it to run `uname -s` and `date +%Y-%m-%d`).
   - **Pass:** returns something like `MINGW64…` / `MSYS` and today's date.
   - **Fail:** "command not found" → the Windows shell isn't POSIX-style (the biggest risk). Report this.
 - [ ] **0b — Cloud mount reachable.** Ask Travis's Cowork to list the shared folder, e.g. `ls "$USERPROFILE"/OneDrive*/sync-test`.
