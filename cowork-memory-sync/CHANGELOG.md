@@ -12,6 +12,16 @@ Bump the version in `.claude-plugin/plugin.json` in the **same commit** that int
 
 ---
 
+## [3.1.1] — 2026-07-04
+
+### Fixed
+- **`list-links` failed in the Cowork sandbox.** It tried to enumerate every space by scanning the global sessions root (`~/Library/Application Support/Claude/…`) and read identity from `~/.config/` — neither of which a Cowork session can reach without a grant, so the skill dead-ended with "I can't access anything." Rewritten to:
+  - **Always report the current space first** from `MEMORY_DIR/.sync-link.json` (the one folder always connected in-sandbox), so the skill is never empty-handed.
+  - **Attempt the machine-wide scan as a best-effort bonus**, requesting a one-time `mcp__cowork__request_cowork_directory` grant for the sessions root and **degrading gracefully** to current-space-only (with a note) if that's declined or blocked — instead of failing.
+  - **Resolve identity from the per-space link fields first** (`user`/`machine` in `.sync-link.json`), since `~/.config/identity.json` is commonly unreachable in the sandbox; global config is now a preferred-if-available source, not a requirement.
+
+No schema, filename, or other-skill changes.
+
 ## [3.1.0] — 2026-07-03
 
 Cross-platform support: the plugin now works on **Windows** desktop Cowork as well as macOS. (The **web** version remains unsupported — no local cloud-folder mounts, so the file-based model doesn't apply.)
