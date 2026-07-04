@@ -36,6 +36,10 @@ The plugin writes and reads files; it does **not** grant anyone access. To colla
 
 Both people install this plugin, run "link this space" against their local view of that shared folder in **shared** mode, and push/pull as usual.
 
+## Testing
+
+There's no automated test suite (the skills are prompt-driven), so validation is a manual two-person run — ideally one macOS and one Windows participant sharing a real space. **[TESTING.md](./TESTING.md)** is a step-by-step, cross-platform checklist covering identity, shared push/pull with attribution, the confidentiality gate, the own-files-only sweep, mode switching, and scrub — with a results table to fill in. Start there before relying on a shared space across machines.
+
 ## Layout
 
 ```
@@ -43,6 +47,7 @@ Both people install this plugin, run "link this space" against their local view 
 ├── .claude-plugin/
 │   └── marketplace.json      ← marketplace manifest (one plugin)
 ├── README.md                 ← you are here
+├── TESTING.md                ← cross-platform two-person test checklist
 └── cowork-memory-sync/       ← the plugin
     ├── .claude-plugin/plugin.json
     ├── README.md
